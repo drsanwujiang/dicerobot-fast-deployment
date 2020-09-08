@@ -61,8 +61,8 @@ function deploy_mirai() {
     sudo apt install unzip >> /dev/null
     wget -q -O /root/mirai/mirai.zip https://dl.drsanwujiang.com/dicerobot/mirai.zip
     unzip /root/mirai/mirai.zip -d /root/mirai >> /dev/null
-    echo -e "   请输入机器人的 QQ 号码：/ Please input QQ id of \c"
-    read -p "your robot: " qq_id
+    echo -e "   请输入机器人的 QQ 号码： / Please input QQ id of"
+    read -p "   your robot: " qq_id
     docker_ip4=$(ip -o -4 addr list docker0 | awk '{print $4}' | cut -d/ -f1)
     sudo cat > /root/mirai/plugins/CQHTTPMirai/setting.yml << EOF
 debug: false
@@ -98,8 +98,8 @@ function deploy_dicerobot() {
 function finished_info() {
     echo "=================================================="
     echo ""
-    echo "DiceRobot 及其运行环境已经部署完毕，接下来请依照说明文"
-    echo "档在 Mirai 中登录。 / DiceRobot and runtime"
+    echo "DiceRobot 及其运行环境已经部署完毕，接下来请依照"
+    echo "说明文档在 Mirai 中登录。 / DiceRobot and runtime"
     echo "environment deployment has finished. Follow the"
     echo "documentation to login in Mirai."
 }
