@@ -2,7 +2,7 @@
 
 echo "======================================================================================================"
 echo "                                         DiceRobot 快速部署脚本"
-echo "                                   DiceRobot Fast Deployment Script"
+echo "                                    DiceRobot Fast Deployment Script"
 echo -e "======================================================================================================\n"
 
 function input_info() {
@@ -85,7 +85,7 @@ debug: false
     postUrl: "http://${docker_ip4}/dicerobot.php"
     postMessageFormat: string
 EOF
-    echo "login ${qq_id} ${qq_password}" > /root/mirai/config.txt
+    echo "login ${qq_id} ${qq_password}" >> /root/mirai/config.txt
 
     echo -e "Done\n"
 }
