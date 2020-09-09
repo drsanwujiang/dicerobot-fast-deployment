@@ -1,25 +1,22 @@
 #!/bin/bash
 
-echo "==================================================="
-echo "              DiceRobot 快速部署脚本"
-echo "         DiceRobot Fast Deployment Script"
-echo -e "===================================================\n"
+echo "======================================================================================================"
+echo "                                         DiceRobot 快速部署脚本"
+echo "                                   DiceRobot Fast Deployment Script"
+echo -e "======================================================================================================\n"
 
 function input_info() {
     echo "1) 输入 QQ 账号信息 / Input QQ account information"
 
-    echo "   请输入机器人的 QQ 号码： / Please input the id of"
-    read -p "   your robot's QQ: " qq_id
-    echo "   请输入机器人的 QQ 密码： / Please input the"
-    read -p "   password of your robot's QQ: " qq_password
+    read -p "   请输入机器人的 QQ 号码： / Please input the ID of your robot's QQ: " qq_id
+    read -p "   请输入机器人的 QQ 密码： / Please input the password of your robot's QQ: " qq_password
 
     echo -e "Done\n"
 }
 
 function install_docker() {
     echo "2) 安装 Docker / Install Docker"
-    echo "   这一步可能需要数分钟时间，请耐心等待…… / This"
-    echo "   step may take several minutes, please wait……"
+    echo "   这一步可能需要数分钟时间，请耐心等待…… / This step may take several minutes, please wait……"
 
     sudo apt update -qq >> /dev/null
     sudo apt install -y -qq apt-transport-https ca-certificates curl software-properties-common lsb-release >> /dev/null
@@ -72,6 +69,7 @@ function deploy_mirai() {
     sudo apt install unzip >> /dev/null
     wget -q -O /root/mirai/mirai.zip https://dl.drsanwujiang.com/dicerobot/mirai.zip
     unzip /root/mirai/mirai.zip -d /root/mirai >> /dev/null
+    rm /root/mirai/mirai.zip
     sudo cat > /root/mirai/plugins/CQHTTPMirai/setting.yml << EOF
 debug: false
 '${qq_id}':
@@ -105,12 +103,9 @@ function deploy_dicerobot() {
 }
 
 function finished_info() {
-    echo "=================================================="
-    echo ""
-    echo "DiceRobot 及其运行环境已经部署完毕，接下来请依照"
-    echo "说明文档运行 MiraiOK 即可。 / DiceRobot and runtime"
-    echo "environment has been deployed. Follow the"
-    echo "documentation to run MiraiOK."
+    echo -e "======================================================================================================\n"
+    echo "DiceRobot 及其运行环境已经部署完毕，接下来请依照说明文档运行 MiraiOK 即可。"
+    echo "DiceRobot and runtime environment has been deployed. Follow the documentation to run MiraiOK."
 }
 
 function start_deployment() {
