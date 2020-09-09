@@ -25,4 +25,4 @@
         bash dicerobot-deployment-ubuntu.sh
 
 2. 根据提示输入机器人的 QQ 号
-3. 依照说明文档在 Mirai 中登录。
+3. 依照说明文档运行 MiraiOK。
