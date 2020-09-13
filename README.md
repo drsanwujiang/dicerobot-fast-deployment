@@ -24,5 +24,5 @@
         wget https://raw.githubusercontent.com/drsanwujiang/dicerobot-fast-deployment/master/dicerobot-deployment-ubuntu.sh
         bash dicerobot-deployment-ubuntu.sh
 
-2. 根据提示输入机器人的 QQ 号
-3. 依照说明文档运行 MiraiOK。
+2. 根据提示输入机器人的 QQ 账号及密码
+3. 依照说明文档登录 noVNC 并运行 MiraiOK。
