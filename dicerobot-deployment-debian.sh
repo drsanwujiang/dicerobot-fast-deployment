@@ -82,7 +82,8 @@ function install_docker() {
 {
     "registry-mirrors": [
         "https://docker.mirrors.ustc.edu.cn",
-        "https://hub-mirror.c.163.com"
+        "https://hub-mirror.c.163.com",
+        "https://registry.docker-cn.com"
     ]
 }
 EOF
