@@ -23,7 +23,7 @@ function input_info() {
 
         while true
         do
-            read -p "请输入第 $(($robot_count+1)) 个机器人的 QQ 号码： / Input the QQ ID of No.$(($robot_count+1)) robot: " input_qq_id
+            read -p "请输入第 $(($robot_count+1)) 个机器人的 QQ 号码： / Please input the QQ ID of No.$(($robot_count+1)) robot: " input_qq_id
 
             if  [ ! -n "$input_qq_id" ]; then
                 break
@@ -31,7 +31,7 @@ function input_info() {
                 qq_id[$robot_count]=$input_qq_id
             fi
 
-            read -p "请输入第 $(($robot_count+1)) 个机器人的 QQ 密码： / Input the QQ password of No.$(($robot_count+1)) robot: " qq_password[robot_count]
+            read -p "请输入第 $(($robot_count+1)) 个机器人的 QQ 密码： / Please input the QQ password of No.$(($robot_count+1)) robot: " qq_password[robot_count]
             novnc_port[$robot_count]=$current_novnc_port
             http_api_port[$robot_count]=$current_http_api_port
             let robot_count++
@@ -68,7 +68,7 @@ function input_info() {
 
 function install_docker() {
     printf "2) 安装 Docker / Install Docker\n"
-    printf "这一步可能需要数分钟时间，请耐心等待…… / This step may take several minutes, please wait……\n"
+    printf "这一步可能需要数分钟时间，请耐心等待…… / This step may take several minutes, please wait...\n"
 
     sudo apt update >> /dev/null
     sudo apt install -y apt-transport-https ca-certificates curl software-properties-common lsb-release unzip >> /dev/null
@@ -158,6 +158,7 @@ function deploy_dicerobot() {
         sudo mkdir /var/www/dicerobot/${qq_id[$i]}
         sudo chmod 777 /var/www/dicerobot/${qq_id[$i]}
         git clone -q https://github.com.cnpmjs.org/drsanwujiang/DiceRobot.git /var/www/dicerobot/${qq_id[$i]}
+        sed -i "1a\const HTTP_API_PORT = ${http_api_port[$i]};" /var/www/dicerobot/${qq_id[$i]}/custom_settings.php
     done
 
     printf "\nDone\n\n"
