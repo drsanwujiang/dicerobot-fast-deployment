@@ -1,14 +1,15 @@
 # 快速部署 DiceRobot
 
-* 安装 Docker
-* 创建 Wine 环境
-* 安装 Apache 及 PHP
+* 安装 PHP 及 Swoole
 * 部署 Mirai
-* 下载 DiceRobot
+* 部署 DiceRobot
+* 设置服务
+
 
 ## 系统要求
 
 * Debian / Ubuntu 主流版本
+
 
 ## 用法
 
@@ -25,4 +26,4 @@
         bash dicerobot-deployment-ubuntu.sh
 
 2. 根据提示输入机器人的 QQ 账号及密码
-3. 依照说明文档登录 noVNC 并运行 MiraiOK。
+3. 依照说明文档运行 DiceRobot 及 Mirai。
