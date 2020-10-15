@@ -46,7 +46,7 @@ function install_php_and_swoole() {
     echo "deb https://mirror.xtom.com.hk/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
     apt update >> /dev/null
     apt install -y php7.4-cli php7.4-json php7.4-dev php-pear >> /dev/null
-    printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz
+    printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
     echo "extension=swoole.so" > /etc/php/7.4/mods-available/20-swoole.ini
     ln -s /etc/php/7.4/mods-available/20-swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
 
@@ -62,11 +62,10 @@ function deploy_mirai() {
     apt install -y adoptopenjdk-11-hotspot >> /dev/null
     wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
     mkdir mirai
-    unzip mirai.zip -d /root/mirai >> /dev/null
+    unzip mirai.zip -d mirai >> /dev/null
     cat > mirai/config/Console/AutoLogin.yml << EOF
 plainPasswords:
   ${qq_id}: ${qq_password}
-
 EOF
     cat > mirai/config/MiraiApiHttp/setting.yml << EOF
 host: 0.0.0.0
@@ -94,7 +93,6 @@ heartbeat:
   destinations: [
     "http://127.0.0.1:9500/heartbeat"
   ]
-
 EOF
     rm mirai.zip
 
