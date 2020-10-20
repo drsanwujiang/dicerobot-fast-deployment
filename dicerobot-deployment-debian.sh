@@ -102,12 +102,12 @@ function deploy_dicerobot() {
     printf "5) 部署 DiceRobot / Deploy DiceRobot\n"
 
     php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
-    php composer-setup.php
+    php composer-setup.php >> /dev/null
     mv composer.phar /usr/local/bin/composer
     rm composer-setup.php
-    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-    composer selfupdate
-    composer create-project drsanwujiang/dicerobot:2.0.0-beta
+    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ >> /dev/null
+    composer selfupdate >> /dev/null
+    composer create-project drsanwujiang/dicerobot:2.0.0-beta >> /dev/null
     sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_settings.php
 
     printf "\nDone\n\n"
