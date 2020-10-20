@@ -17,12 +17,12 @@
 
     ### Debian 系统
 
-        wget https://raw.githubusercontent.com/drsanwujiang/dicerobot-fast-deployment/master/dicerobot-deployment-debian.sh
+        wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment/dicerobot-deployment-debian.sh
         sudo bash dicerobot-deployment-debian.sh
 
     ### Ubuntu 系统
 
-        wget https://raw.githubusercontent.com/drsanwujiang/dicerobot-fast-deployment/master/dicerobot-deployment-ubuntu.sh
+        wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment/dicerobot-deployment-ubuntu.sh
         sudo bash dicerobot-deployment-ubuntu.sh
 
 2. 根据提示输入机器人的 QQ 账号及密码
