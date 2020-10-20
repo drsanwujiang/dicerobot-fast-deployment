@@ -108,7 +108,8 @@ function deploy_dicerobot() {
     rm composer-setup.php
     composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
     composer selfupdate
-    composer create-project drsanwujiang/dicerobot:2.0.0-alpha
+    composer create-project drsanwujiang/dicerobot:2.0.0-beta
+    sed '0,/10000/{s/10000/${qq_id}/}' dicerobot/config/custom_settings.php
 
     printf "\nDone\n\n"
 }
@@ -117,34 +118,36 @@ function setup_services() {
     printf "6) 设置服务 / Setup services\n"
 
     work_path=$(pwd)
+    cat > /etc/systemd/system/dicerobot.service << EOF
+[Unit]
+Description=A TRPG dice robot based on Swoole
+After=network.target
+After=syslog.target
+Before=mirai.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php ${work_path}/dicerobot/dicerobot.php
+ExecReload=/bin/kill -12 \$MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
     cat > /etc/systemd/system/mirai.service << EOF
 [Unit]
 Description=Mirai Console
 After=network.target
 After=syslog.target
+After=dicerobot.service
 
 [Service]
 Type=simple
-ExecStart=/bin/java -cp "${work_path}/mirai/libs/*" net.mamoe.mirai.console.pure.MiraiConsolePureLoader $*
+WorkingDirectory=${work_path}/mirai
+ExecStart=${work_path}/mirai/start-mirai.sh
+ExecStop=${work_path}/mirai/stop-mirai.sh
 
 [Install]
 WantedBy=multi-user.target
-
-EOF
-    cat > /etc/systemd/system/dicerobot.service << EOF
-[Unit]
-Description=A TRPG dice robot based on Swoole.
-After=network.target
-After=syslog.target
-
-[Service]
-Type=simple
-LimitNOFILE=65535
-ExecStart=/usr/bin/php ${work_path}/dicerobot/dicerobot.php
-
-[Install]
-WantedBy=multi-user.target
-
 EOF
     systemctl daemon-reload
 
