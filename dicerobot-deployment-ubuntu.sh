@@ -142,8 +142,8 @@ After=dicerobot.service
 [Service]
 Type=simple
 WorkingDirectory=${work_path}
-ExecStart=${work_path}/start-mirai.sh
-ExecStop=${work_path}/stop-mirai.sh
+ExecStart=/bin/bash ${work_path}/mirai/start-mirai.sh
+ExecStop=/bin/bash ${work_path}/mirai/stop-mirai.sh
 
 [Install]
 WantedBy=multi-user.target
