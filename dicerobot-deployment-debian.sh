@@ -105,9 +105,9 @@ function deploy_dicerobot() {
     php composer-setup.php >> /dev/null
     mv composer.phar /usr/local/bin/composer
     rm composer-setup.php
-    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ >> /dev/null
-    composer selfupdate >> /dev/null
-    composer create-project drsanwujiang/dicerobot:2.0.0-beta >> /dev/null
+    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --quiet
+    composer selfupdate --quiet
+    composer create-project drsanwujiang/dicerobot:2.0.0-beta --quiet
     sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_settings.php
 
     printf "\nDone\n\n"
