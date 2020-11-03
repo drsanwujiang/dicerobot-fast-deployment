@@ -102,7 +102,7 @@ function deploy_dicerobot() {
 
     php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
     php composer-setup.php --quiet
-    mv composer.phar /usr/local/bin/composer
+    mv -f composer.phar /usr/local/bin/composer
     php -r "unlink('composer-setup.php');"
     composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --quiet
     composer selfupdate --quiet
