@@ -39,15 +39,15 @@ function install_php_and_swoole() {
     printf "2) 安装 PHP 和 Swoole / Install PHP and Swoole\n"
     printf "这一步可能需要数分钟时间，请耐心等待…… / This step may take several minutes, please wait...\n"
 
-    apt update >> /dev/null
-    apt install -y apt-transport-https ca-certificates curl software-properties-common lsb-release >> /dev/null
-    wget -q -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-    echo "deb https://mirror.xtom.com.hk/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
-    apt update >> /dev/null
-    apt install -y php7.4-cli php7.4-json php7.4-dev php-pear >> /dev/null
+    dnf install -y -q epel-release >> /dev/null
+    sed -e 's!^metalink=!#metalink=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!//download.fedoraproject.org/pub!//mirrors.tuna.tsinghua.edu.cn!g' -e 's!http://mirrors.tuna!https://mirrors.tuna!g' -i /etc/yum.repos.d/epel*
+    dnf install -y -q https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-8.rpm >> /dev/null
+    sed -e 's!^mirrorlist=!#mirrorlist=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!http://rpms.remirepo.net!https://mirrors.tuna.tsinghua.edu.cn/remi!g' -i /etc/yum.repos.d/remi*
+    dnf makecache -q >> /dev/null
+    dnf module enable -y -q php:remi-7.4 >> /dev/null
+    dnf install -y -q php-cli php-json php-devel php-pear >> /dev/null
     printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
-    echo "extension=swoole.so" > /etc/php/7.4/mods-available/swoole.ini
-    ln -s /etc/php/7.4/mods-available/swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
+    echo "extension=swoole.so" > /etc/php.d/20-swoole.ini
 
     printf "\nDone\n\n"
 }
@@ -55,10 +55,16 @@ function install_php_and_swoole() {
 function deploy_mirai() {
     printf "4) 部署 Mirai / Deploy Mirai\n"
 
-    wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - >> /dev/null
-    echo "deb https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/AdoptOpenJDK.list
-    apt update >> /dev/null
-    apt install -y adoptopenjdk-11-hotspot unzip >> /dev/null
+    cat > /etc/yum.repos.d/AdoptOpenJDK.repo << EOF
+[AdoptOpenJDK]
+name=AdoptOpenJDK
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/rpm/centos\$releasever-\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+EOF
+    dnf makecache -q >> /dev/null
+    dnf install -y -q adoptopenjdk-11-hotspot unzip >> /dev/null
     wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
     mkdir mirai
     unzip mirai.zip -d mirai >> /dev/null

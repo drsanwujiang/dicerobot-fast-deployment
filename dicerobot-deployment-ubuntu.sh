@@ -40,7 +40,7 @@ function install_php_and_swoole() {
     printf "这一步可能需要数分钟时间，请耐心等待…… / This step may take several minutes, please wait...\n"
 
     apt update >> /dev/null
-    apt install -y apt-transport-https ca-certificates curl software-properties-common lsb-release unzip >> /dev/null
+    apt install -y apt-transport-https ca-certificates curl software-properties-common lsb-release >> /dev/null
     add-apt-repository ppa:ondrej/php >> /dev/null
     apt update >> /dev/null
     apt install -y php7.4-cli php7.4-json php7.4-dev php-pear >> /dev/null
@@ -57,7 +57,7 @@ function deploy_mirai() {
     wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add - >> /dev/null
     echo "deb https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/AdoptOpenJDK.list
     apt update >> /dev/null
-    apt install -y adoptopenjdk-11-hotspot >> /dev/null
+    apt install -y adoptopenjdk-11-hotspot unzip >> /dev/null
     wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
     mkdir mirai
     unzip mirai.zip -d mirai >> /dev/null
