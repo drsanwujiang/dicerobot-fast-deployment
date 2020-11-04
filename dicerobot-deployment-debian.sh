@@ -44,7 +44,7 @@ function install_php_and_swoole() {
     wget -q -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
     echo "deb https://mirror.xtom.com.hk/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
     apt update >> /dev/null
-    apt install -y php7.4-cli php7.4-json php7.4-dev php-pear >> /dev/null
+    apt install -y php7.4-cli php7.4-json php7.4-zip php7.4-dev php-pear >> /dev/null
     printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
     echo "extension=swoole.so" > /etc/php/7.4/mods-available/swoole.ini
     ln -s /etc/php/7.4/mods-available/swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
@@ -125,6 +125,8 @@ After=syslog.target
 Before=mirai.service
 
 [Service]
+User=$(id -un)
+Group=$(id -gn)
 Type=simple
 ExecStart=/usr/bin/php ${work_path}/dicerobot/dicerobot.php
 ExecReload=/bin/kill -12 \$MAINPID

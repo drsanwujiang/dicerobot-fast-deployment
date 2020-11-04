@@ -45,7 +45,7 @@ function install_php_and_swoole() {
     sed -e 's!^mirrorlist=!#mirrorlist=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!http://rpms.remirepo.net!https://mirrors.tuna.tsinghua.edu.cn/remi!g' -i /etc/yum.repos.d/remi*
     dnf makecache -q >> /dev/null
     dnf module enable -y -q php:remi-7.4 >> /dev/null
-    dnf install -y -q php-cli php-json php-devel php-pear >> /dev/null
+    dnf install -y -q php-cli php-json php-zip php-devel php-pear >> /dev/null
     printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
     echo "extension=swoole.so" > /etc/php.d/20-swoole.ini
 
@@ -131,6 +131,8 @@ After=syslog.target
 Before=mirai.service
 
 [Service]
+User=$(id -un)
+Group=$(id -gn)
 Type=simple
 ExecStart=/usr/bin/php ${work_path}/dicerobot/dicerobot.php
 ExecReload=/bin/kill -12 \$MAINPID
