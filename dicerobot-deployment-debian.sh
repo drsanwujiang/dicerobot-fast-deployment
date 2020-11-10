@@ -108,7 +108,7 @@ function deploy_dicerobot() {
     composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
     composer selfupdate --no-interaction --quiet
     composer create-project drsanwujiang/dicerobot-skeleton dicerobot --no-interaction --no-dev --quiet
-    sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_settings.php
+    sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_config.php
 
     printf "\nDone\n\n"
 }
