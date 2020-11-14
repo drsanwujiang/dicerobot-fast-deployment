@@ -111,9 +111,9 @@ function deploy_dicerobot() {
     php composer-setup.php --quiet
     mv -f composer.phar /usr/local/bin/composer
     php -r "unlink('composer-setup.php');"
-    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
-    composer selfupdate --no-interaction --quiet
-    composer create-project drsanwujiang/dicerobot-skeleton dicerobot --no-interaction --no-dev --quiet
+    /usr/local/bin/composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
+    /usr/local/bin/composer selfupdate --no-interaction --quiet
+    /usr/local/bin/composer create-project drsanwujiang/dicerobot-skeleton dicerobot --no-interaction --no-dev --quiet
     sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_config.php
 
     printf "\nDone\n\n"
