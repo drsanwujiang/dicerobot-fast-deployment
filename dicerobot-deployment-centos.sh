@@ -6,14 +6,18 @@ function exceptional_termination() {
   exit 1
 }
 
+function process_failed() {
+  printf "\033[31m%s\033[0m\n\n" "$1"
+  exceptional_termination
+}
+
 printf "======================================================================================================\n"
 printf "\033[32m                                         DiceRobot 快速部署脚本\033[0m\n"
 printf "======================================================================================================\n\n"
 
 # Check privilege
 if [[ $EUID -ne 0 ]]; then
-  printf "\033[31m请使用 sudo 权限运行此脚本\033[0m\n\n"
-  exceptional_termination
+  process_failed "请使用 sudo 权限运行此脚本"
 fi
 
 # Input QQ account profile
@@ -21,15 +25,16 @@ printf "\033[32m1. 输入 QQ 账号信息\033[0m\n"
 
 while true
 do
-  read -p "请输入机器人的 QQ 号码: " qq_id
-  read -p "请输入机器人的 QQ 密码: " qq_password
+  read -r -p "请输入机器人的 QQ 号码: " qq_id
+  read -r -p "请输入机器人的 QQ 密码: " qq_password
 
   printf "\n****************************************\n"
   printf "%-15s   %-20s\n" " QQ 号码" "   QQ 密码"
   printf "****************************************\n"
   printf "%-15s   %-20s\n" "${qq_id}" "${qq_password}"
   printf "****************************************\n"
-  read -r -p "请确认以上信息是否正确？ [Y/N] " is_correct
+  printf "\033[33m请确认以上信息是否正确？\033[0m [Y/N] "
+  read -r is_correct
   printf "\n"
 
   case $is_correct in
@@ -55,8 +60,17 @@ sed -e 's!^mirrorlist=!#mirrorlist=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!http:/
 dnf makecache -q >> /dev/null
 dnf module enable -y -q php:remi-7.4 >> /dev/null
 dnf install -y -q php-cli php-json php-zip php-devel php-pear >> /dev/null
+
+if ! (php -v >/dev/null 2>&1); then
+  process_failed "PHP 安装失败"
+fi
+
 printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
 echo "extension=swoole.so" > /etc/php.d/20-swoole.ini
+
+if ! (php --ri swoole >/dev/null 2>&1); then
+  process_failed "Swoole 安装失败"
+fi
 
 printf "\nDone\n\n"
 
@@ -73,6 +87,11 @@ gpgkey=https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
 EOF
 dnf makecache -q >> /dev/null
 dnf install -y -q adoptopenjdk-11-hotspot unzip >> /dev/null
+
+if ! (java --version >/dev/null 2>&1); then
+  process_failed "Java 安装失败"
+fi
+
 wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
 mkdir mirai
 unzip mirai.zip -d mirai >> /dev/null
@@ -107,7 +126,7 @@ destinations: [
 "http://127.0.0.1:9500/heartbeat"
 ]
 EOF
-rm -rf mirai.zip
+rm -f mirai.zip
 
 printf "\nDone\n\n"
 
@@ -119,13 +138,17 @@ php composer-setup.php --quiet
 rm -f composer-setup.php
 mv -f composer.phar /usr/local/bin/composer
 
-if !(composer -V >/dev/null 2>&1); then
+if ! (composer --version --no-interaction >/dev/null 2>&1); then
   mv -f /usr/local/bin/composer /usr/bin/composer
+fi
+
+if ! (composer --version --no-interaction >/dev/null 2>&1); then
+  process_failed "Composer 安装失败"
 fi
 
 composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
 composer create-project drsanwujiang/dicerobot-skeleton dicerobot --no-dev --no-interaction --quiet
-sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_config.php
+sed -i "0,/10000/{s/10000/${qq_id}/}" dicerobot/config/custom_config.php
 
 printf "\nDone\n\n"
 

@@ -6,14 +6,18 @@ function exceptional_termination() {
   exit 1
 }
 
+function process_failed() {
+  printf "\033[31m%s\033[0m\n\n" "$1"
+  exceptional_termination
+}
+
 printf "======================================================================================================\n"
 printf "\033[32m                                         DiceRobot 快速部署脚本\033[0m\n"
 printf "======================================================================================================\n\n"
 
 # Check privilege
 if [[ $EUID -ne 0 ]]; then
-  printf "\033[31m请使用 sudo 权限运行此脚本\033[0m\n\n"
-  exceptional_termination
+  process_failed "请使用 sudo 权限运行此脚本"
 fi
 
 # Input QQ account profile
@@ -21,15 +25,16 @@ printf "\033[32m1. 输入 QQ 账号信息\033[0m\n"
 
 while true
 do
-  read -p "请输入机器人的 QQ 号码: " qq_id
-  read -p "请输入机器人的 QQ 密码: " qq_password
+  read -r -p "请输入机器人的 QQ 号码: " qq_id
+  read -r -p "请输入机器人的 QQ 密码: " qq_password
 
   printf "\n****************************************\n"
   printf "%-15s   %-20s\n" " QQ 号码" "   QQ 密码"
   printf "****************************************\n"
   printf "%-15s   %-20s\n" "${qq_id}" "${qq_password}"
   printf "****************************************\n"
-  read -r -p "请确认以上信息是否正确？ [Y/N] " is_correct
+  printf "\033[33m请确认以上信息是否正确？\033[0m [Y/N] "
+  read -r is_correct
   printf "\n"
 
   case $is_correct in
@@ -53,9 +58,18 @@ apt-get install apt-transport-https ca-certificates curl software-properties-com
 add-apt-repository "https://launchpad.proxy.ustclug.org/ondrej/php/ubuntu" -y -qq
 apt-get update -qq
 apt-get install php7.4-cli php7.4-json php7.4-zip php7.4-dev php-pear -y -qq
+
+if ! (php -v >/dev/null 2>&1); then
+  process_failed "PHP 安装失败"
+fi
+
 printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
 echo "extension=swoole.so" > /etc/php/7.4/mods-available/swoole.ini
 ln -s /etc/php/7.4/mods-available/swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
+
+if ! (php --ri swoole >/dev/null 2>&1); then
+  process_failed "Swoole 安装失败"
+fi
 
 printf "\nDone\n\n"
 
@@ -66,6 +80,11 @@ wget -q -O /etc/apt/trusted.gpg.d/AdoptOpenJDK.gpg https://adoptopenjdk.jfrog.io
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/AdoptOpenJDK.list
 apt-get update -qq
 apt-get install adoptopenjdk-11-hotspot unzip -y -qq
+
+if ! (java --version >/dev/null 2>&1); then
+  process_failed "Java 安装失败"
+fi
+
 wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
 mkdir mirai
 unzip mirai.zip -d mirai -qq
@@ -100,7 +119,7 @@ destinations: [
 "http://127.0.0.1:9500/heartbeat"
 ]
 EOF
-rm -rf mirai.zip
+rm -f mirai.zip
 
 printf "\nDone\n\n"
 
@@ -112,8 +131,12 @@ php composer-setup.php --quiet
 rm -f composer-setup.php
 mv -f composer.phar /usr/local/bin/composer
 
-if !(composer -V >/dev/null 2>&1); then
+if ! (composer --version --no-interaction >/dev/null 2>&1); then
   mv -f /usr/local/bin/composer /usr/bin/composer
+fi
+
+if ! (composer --version --no-interaction >/dev/null 2>&1); then
+  process_failed "Composer 安装失败"
 fi
 
 composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
