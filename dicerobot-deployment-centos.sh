@@ -53,20 +53,22 @@ printf "Done\n\n"
 printf "\033[32m2. 安装 PHP 和 Swoole\033[0m\n"
 printf "这一步可能需要数分钟时间，请耐心等待……\n"
 
-dnf -y -q install epel-release >> /dev/null
+dnf -y -q install epel-release > /dev/null 2>&1
 sed -e 's!^metalink=!#metalink=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!//download.fedoraproject.org/pub!//mirrors.tuna.tsinghua.edu.cn!g' -e 's!http://mirrors.tuna!https://mirrors.tuna!g' -i /etc/yum.repos.d/epel*
-dnf -y -q install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-8.rpm >> /dev/null
+dnf -y -q install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-8.rpm > /dev/null 2>&1
 sed -e 's!^mirrorlist=!#mirrorlist=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!http://rpms.remirepo.net!https://mirrors.tuna.tsinghua.edu.cn/remi!g' -i /etc/yum.repos.d/remi*
-{ dnf -q makecache; dnf -y -q module enable php:remi-7.4; dnf -y -q install php-cli php-json php-zip php-devel php-pear; } >> /dev/null
+dnf -q makecache > /dev/null 2>&1
+dnf -y -q module enable php:remi-7.4 > /dev/null 2>&1
+dnf -y -q install php-cli php-json php-zip php-devel php-pear > /dev/null 2>&1
 
-if ! (php -v >/dev/null 2>&1); then
+if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"
 fi
 
-printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz >> /dev/null
+printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz > /dev/null 2>&1
 echo "extension=swoole.so" > /etc/php.d/20-swoole.ini
 
-if ! (php --ri swoole >/dev/null 2>&1); then
+if ! (php --ri swoole > /dev/null 2>&1); then
   process_failed "Swoole 安装失败"
 fi
 
@@ -83,9 +85,10 @@ enabled=1
 gpgcheck=1
 gpgkey=https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
 EOF
-{ dnf -q makecache; dnf -y -q install adoptopenjdk-11-hotspot unzip; } >> /dev/null
+dnf -q makecache > /dev/null 2>&1
+dnf -y -q install adoptopenjdk-11-hotspot unzip > /dev/null 2>&1
 
-if ! (java --version >/dev/null 2>&1); then
+if ! (java --version > /dev/null 2>&1); then
   process_failed "Java 安装失败"
 fi
 
@@ -135,11 +138,11 @@ php composer-setup.php --quiet
 rm -f composer-setup.php
 mv -f composer.phar /usr/local/bin/composer
 
-if ! (composer --no-interaction --version >/dev/null 2>&1); then
+if ! (composer --no-interaction --version > /dev/null 2>&1); then
   mv -f /usr/local/bin/composer /usr/bin/composer
 fi
 
-if ! (composer --no-interaction --version >/dev/null 2>&1); then
+if ! (composer --no-interaction --version > /dev/null 2>&1); then
   process_failed "Composer 安装失败"
 fi
 
