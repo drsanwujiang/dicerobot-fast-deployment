@@ -53,13 +53,11 @@ printf "Done\n\n"
 printf "\033[32m2. 安装 PHP 和 Swoole\033[0m\n"
 printf "这一步可能需要数分钟时间，请耐心等待……\n"
 
-dnf install -y -q epel-release >> /dev/null
+dnf -y -q install epel-release >> /dev/null
 sed -e 's!^metalink=!#metalink=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!//download.fedoraproject.org/pub!//mirrors.tuna.tsinghua.edu.cn!g' -e 's!http://mirrors.tuna!https://mirrors.tuna!g' -i /etc/yum.repos.d/epel*
-dnf install -y -q https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-8.rpm >> /dev/null
+dnf -y -q install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-8.rpm >> /dev/null
 sed -e 's!^mirrorlist=!#mirrorlist=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!http://rpms.remirepo.net!https://mirrors.tuna.tsinghua.edu.cn/remi!g' -i /etc/yum.repos.d/remi*
-dnf makecache -q >> /dev/null
-dnf module enable -y -q php:remi-7.4 >> /dev/null
-dnf install -y -q php-cli php-json php-zip php-devel php-pear >> /dev/null
+{ dnf -q makecache; dnf -y -q module enable php:remi-7.4; dnf -y -q install php-cli php-json php-zip php-devel php-pear; } >> /dev/null
 
 if ! (php -v >/dev/null 2>&1); then
   process_failed "PHP 安装失败"
@@ -77,7 +75,7 @@ printf "\nDone\n\n"
 # Deploy Mirai
 printf "\033[32m3. 部署 Mirai\033[0m\n"
 
-cat > /etc/yum.repos.d/AdoptOpenJDK.repo << EOF
+cat > /etc/yum.repos.d/AdoptOpenJDK.repo <<EOF
 [AdoptOpenJDK]
 name=AdoptOpenJDK
 baseurl=https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/rpm/centos\$releasever-\$basearch/
@@ -85,8 +83,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
 EOF
-dnf makecache -q >> /dev/null
-dnf install -y -q adoptopenjdk-11-hotspot unzip >> /dev/null
+{ dnf -q makecache; dnf -y -q install adoptopenjdk-11-hotspot unzip; } >> /dev/null
 
 if ! (java --version >/dev/null 2>&1); then
   process_failed "Java 安装失败"
@@ -94,12 +91,12 @@ fi
 
 wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
 mkdir mirai
-unzip mirai.zip -d mirai >> /dev/null
-cat > mirai/config/Console/AutoLogin.yml << EOF
+unzip -qq mirai.zip -d mirai
+cat > mirai/config/Console/AutoLogin.yml <<EOF
 plainPasswords:
 ${qq_id}: ${qq_password}
 EOF
-cat > mirai/config/MiraiApiHttp/setting.yml << EOF
+cat > mirai/config/MiraiApiHttp/setting.yml <<EOF
 host: 0.0.0.0
 port: 8080
 authKey: 12345678
@@ -138,16 +135,16 @@ php composer-setup.php --quiet
 rm -f composer-setup.php
 mv -f composer.phar /usr/local/bin/composer
 
-if ! (composer --version --no-interaction >/dev/null 2>&1); then
+if ! (composer --no-interaction --version >/dev/null 2>&1); then
   mv -f /usr/local/bin/composer /usr/bin/composer
 fi
 
-if ! (composer --version --no-interaction >/dev/null 2>&1); then
+if ! (composer --no-interaction --version >/dev/null 2>&1); then
   process_failed "Composer 安装失败"
 fi
 
-composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
-composer create-project drsanwujiang/dicerobot-skeleton dicerobot --no-dev --no-interaction --quiet
+composer --no-interaction --quiet config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton dicerobot --no-dev
 sed -i "0,/10000/{s/10000/${qq_id}/}" dicerobot/config/custom_config.php
 
 printf "\nDone\n\n"
@@ -156,7 +153,7 @@ printf "\nDone\n\n"
 printf "\033[32m5. 设置服务\033[0m\n"
 
 work_path=$(pwd)
-cat > /etc/systemd/system/dicerobot.service << EOF
+cat > /etc/systemd/system/dicerobot.service <<EOF
 [Unit]
 Description=A TRPG dice robot based on Swoole
 After=network.target
@@ -173,7 +170,7 @@ ExecReload=/bin/kill -12 \$MAINPID
 [Install]
 WantedBy=multi-user.target
 EOF
-cat > /etc/systemd/system/mirai.service << EOF
+cat > /etc/systemd/system/mirai.service <<EOF
 [Unit]
 Description=Mirai Console
 After=network.target

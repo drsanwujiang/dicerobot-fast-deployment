@@ -53,11 +53,11 @@ printf "Done\n\n"
 printf "\033[32m2. 安装 PHP 和 Swoole\033[0m\n"
 printf "这一步可能需要数分钟时间，请耐心等待……\n"
 
-apt-get update -qq
-apt-get install apt-transport-https ca-certificates curl software-properties-common lsb-release -y -qq
-add-apt-repository "https://launchpad.proxy.ustclug.org/ondrej/php/ubuntu" -y -qq
-apt-get update -qq
-apt-get install php7.4-cli php7.4-json php7.4-zip php7.4-dev php-pear -y -qq
+apt-get -qq update
+apt-get -y -qq install apt-transport-https ca-certificates curl software-properties-common lsb-release
+add-apt-repository -y -qq "https://launchpad.proxy.ustclug.org/ondrej/php/ubuntu"
+apt-get -qq update
+apt-get -y -qq install php7.4-cli php7.4-json php7.4-zip php7.4-dev php-pear
 
 if ! (php -v >/dev/null 2>&1); then
   process_failed "PHP 安装失败"
@@ -78,8 +78,8 @@ printf "\033[32m3. 部署 Mirai\033[0m\n"
 
 wget -q -O /etc/apt/trusted.gpg.d/AdoptOpenJDK.gpg https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/AdoptOpenJDK.list
-apt-get update -qq
-apt-get install adoptopenjdk-11-hotspot unzip -y -qq
+apt-get -qq update
+apt-get -y -qq install adoptopenjdk-11-hotspot unzip
 
 if ! (java --version >/dev/null 2>&1); then
   process_failed "Java 安装失败"
@@ -87,12 +87,12 @@ fi
 
 wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
 mkdir mirai
-unzip mirai.zip -d mirai -qq
-cat > mirai/config/Console/AutoLogin.yml << EOF
+unzip -qq mirai.zip -d mirai
+cat > mirai/config/Console/AutoLogin.yml <<EOF
 plainPasswords:
 ${qq_id}: ${qq_password}
 EOF
-cat > mirai/config/MiraiApiHttp/setting.yml << EOF
+cat > mirai/config/MiraiApiHttp/setting.yml <<EOF
 host: 0.0.0.0
 port: 8080
 authKey: 12345678
@@ -131,17 +131,17 @@ php composer-setup.php --quiet
 rm -f composer-setup.php
 mv -f composer.phar /usr/local/bin/composer
 
-if ! (composer --version --no-interaction >/dev/null 2>&1); then
+if ! (composer --no-interaction --version >/dev/null 2>&1); then
   mv -f /usr/local/bin/composer /usr/bin/composer
 fi
 
-if ! (composer --version --no-interaction >/dev/null 2>&1); then
+if ! (composer --no-interaction --version >/dev/null 2>&1); then
   process_failed "Composer 安装失败"
 fi
 
-composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ --no-interaction --quiet
-composer create-project drsanwujiang/dicerobot-skeleton dicerobot --no-dev --no-interaction --quiet
-sed -i "0,/10000/{s/10000/"${qq_id}"/}" dicerobot/config/custom_config.php
+composer --no-interaction --quiet config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton dicerobot --no-dev
+sed -i "0,/10000/{s/10000/${qq_id}/}" dicerobot/config/custom_config.php
 
 printf "\nDone\n\n"
 
@@ -149,7 +149,7 @@ printf "\nDone\n\n"
 printf "\033[32m5. 设置服务\033[0m\n"
 
 work_path=$(pwd)
-cat > /etc/systemd/system/dicerobot.service << EOF
+cat > /etc/systemd/system/dicerobot.service <<EOF
 [Unit]
 Description=A TRPG dice robot based on Swoole
 After=network.target
@@ -166,7 +166,7 @@ ExecReload=/bin/kill -12 \$MAINPID
 [Install]
 WantedBy=multi-user.target
 EOF
-cat > /etc/systemd/system/mirai.service << EOF
+cat > /etc/systemd/system/mirai.service <<EOF
 [Unit]
 Description=Mirai Console
 After=network.target
