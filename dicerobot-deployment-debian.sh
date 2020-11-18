@@ -77,7 +77,7 @@ printf "\nDone\n\n"
 # Deploy Mirai
 printf "\033[32m3. 部署 Mirai\033[0m\n"
 
-wget -q -O /etc/apt/trusted.gpg.d/AdoptOpenJDK.gpg https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key --quiet add -
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/AdoptOpenJDK.list
 apt-get -qq update
 apt-get -y -qq install adoptopenjdk-11-hotspot unzip
