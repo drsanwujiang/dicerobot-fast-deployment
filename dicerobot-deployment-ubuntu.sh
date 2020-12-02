@@ -57,7 +57,7 @@ apt-get -qq update > /dev/null 2>&1
 apt-get -y -qq install apt-transport-https ca-certificates curl software-properties-common lsb-release > /dev/null 2>&1
 add-apt-repository -y -qq "https://launchpad.proxy.ustclug.org/ondrej/php/ubuntu" > /dev/null 2>&1
 apt-get -qq update > /dev/null 2>&1
-apt-get -y -qq install php7.4-cli php7.4-json php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
+apt-get -y -qq install php7.4-cli php7.4-json php7.4-mbstring php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
 
 if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"

@@ -58,7 +58,7 @@ apt-get -y -qq install apt-transport-https ca-certificates curl software-propert
 wget -q -O /etc/apt/trusted.gpg.d/PHP.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://mirror.xtom.com.hk/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
 apt-get -qq update > /dev/null 2>&1
-apt-get -y -qq install php7.4-cli php7.4-json php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
+apt-get -y -qq install php7.4-cli php7.4-json php7.4-mbstring php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
 
 if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"

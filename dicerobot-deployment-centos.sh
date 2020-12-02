@@ -59,7 +59,7 @@ dnf -y -q install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-rele
 sed -e 's!^mirrorlist=!#mirrorlist=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!http://rpms.remirepo.net!https://mirrors.tuna.tsinghua.edu.cn/remi!g' -i /etc/yum.repos.d/remi*
 dnf -q makecache > /dev/null 2>&1
 dnf -y -q module enable php:remi-7.4 > /dev/null 2>&1
-dnf -y -q install php-cli php-json php-zip php-devel php-pear > /dev/null 2>&1
+dnf -y -q install php-cli php-json php-mbstring php-zip php-devel php-pear > /dev/null 2>&1
 
 if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"
