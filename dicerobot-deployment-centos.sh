@@ -65,7 +65,7 @@ if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"
 fi
 
-printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz > /dev/null 2>&1
+printf "yes\nyes\nyes\nyes\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz > /dev/null 2>&1
 echo "extension=swoole.so" > /etc/php.d/20-swoole.ini
 
 if ! (php --ri swoole > /dev/null 2>&1); then
