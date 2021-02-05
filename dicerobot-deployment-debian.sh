@@ -87,9 +87,9 @@ if ! (java --version > /dev/null 2>&1); then
   process_failed "Java 安装失败"
 fi
 
-wget -q https://dl.drsanwujiang.com/dicerobot/mirai-mcl.zip
+wget -q https://dl.drsanwujiang.com/dicerobot/dicerobot3-mirai.zip
 mkdir mirai
-unzip -qq mirai-mcl.zip -d mirai
+unzip -qq dicerobot3-mirai.zip -d mirai
 cat > mirai/config/Console/AutoLogin.yml <<EOF
 accounts:
   -
@@ -133,7 +133,7 @@ heartbeat:
   extraBody: {}
   extraHeaders: {}
 EOF
-rm -f mirai.zip
+rm -f dicerobot3-mirai.zip
 
 printf "\nDone\n\n"
 
