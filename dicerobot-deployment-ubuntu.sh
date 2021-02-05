@@ -89,6 +89,7 @@ fi
 wget -q https://dl.drsanwujiang.com/dicerobot/dicerobot3-mirai.zip
 mkdir mirai
 unzip -qq dicerobot3-mirai.zip -d mirai
+rm -f dicerobot3-mirai.zip
 cat > mirai/config/Console/AutoLogin.yml <<EOF
 accounts:
   -
@@ -132,7 +133,6 @@ heartbeat:
   extraBody: {}
   extraHeaders: {}
 EOF
-rm -f dicerobot3-mirai.zip
 
 printf "\nDone\n\n"
 
