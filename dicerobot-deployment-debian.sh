@@ -58,14 +58,14 @@ apt-get -y -qq install apt-transport-https ca-certificates curl software-propert
 wget -q -O /etc/apt/trusted.gpg.d/PHP.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://mirror.xtom.com.hk/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
 apt-get -qq update > /dev/null 2>&1
-apt-get -y -qq install php7.4-cli php7.4-json php7.4-mbstring php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
+apt-get -y -qq install php7.4-cli php7.4-curl php7.4-json php7.4-mbstring php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
 
 if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"
 fi
 
 apt-get -y -qq install libcurl4-openssl-dev > /dev/null 2>&1
-printf "yes\nyes\nyes\nyes\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz > /dev/null 2>&1
+printf "yes\nyes\nyes\nno\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz > /dev/null 2>&1
 echo "extension=swoole.so" > /etc/php/7.4/mods-available/swoole.ini
 ln -s /etc/php/7.4/mods-available/swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
 
