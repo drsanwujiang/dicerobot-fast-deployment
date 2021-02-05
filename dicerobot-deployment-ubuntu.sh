@@ -88,7 +88,7 @@ fi
 
 wget -q https://dl.drsanwujiang.com/dicerobot/mirai-mcl.zip
 mkdir mirai
-unzip -qq mirai.zip -d mirai
+unzip -qq mirai-mcl.zip -d mirai
 cat > mirai/config/Console/AutoLogin.yml <<EOF
 accounts:
   -
@@ -99,7 +99,7 @@ accounts:
     configuration:
       protocol: ANDROID_PHONE
 EOF
-cat > mirai/config/MiraiApiHttp/setting.yml <<EOF
+cat > mirai/config/net.mamoe.mirai-api-http/setting.yml <<EOF
 cors:
   - '*'
 host: 0.0.0.0
