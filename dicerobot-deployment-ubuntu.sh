@@ -63,7 +63,7 @@ if ! (php -v > /dev/null 2>&1); then
   process_failed "PHP 安装失败"
 fi
 
-printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole.tgz > /dev/null 2>&1
+printf "yes\nyes\nyes\nno\n" | pecl install https://dl.drsanwujiang.com/dicerobot/dicerobot2-swoole.tgz > /dev/null 2>&1
 echo "extension=swoole.so" > /etc/php/7.4/mods-available/swoole.ini
 ln -s /etc/php/7.4/mods-available/swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
 
@@ -85,12 +85,13 @@ if ! (java --version > /dev/null 2>&1); then
   process_failed "Java 安装失败"
 fi
 
-wget -q https://dl.drsanwujiang.com/dicerobot/mirai.zip
+wget -q https://dl.drsanwujiang.com/dicerobot/dicerobot2-mirai.zip
 mkdir mirai
-unzip -qq mirai.zip -d mirai
+unzip -qq dicerobot2-mirai.zip -d mirai
+rm -f dicerobot2-mirai.zip
 cat > mirai/config/Console/AutoLogin.yml <<EOF
 plainPasswords:
-${qq_id}: ${qq_password}
+  ${qq_id}: ${qq_password}
 EOF
 cat > mirai/config/MiraiApiHttp/setting.yml <<EOF
 host: 0.0.0.0
@@ -98,28 +99,27 @@ port: 8080
 authKey: 12345678
 
 report:
-enable: true
-groupMessage:
-report: true
-friendMessage:
-report: true
-tempMessage:
-report: true
-eventMessage:
-report: true
-destinations: [
-"http://127.0.0.1:9500/report"
-]
+  enable: true
+  groupMessage:
+    report: true
+  friendMessage:
+    report: true
+  tempMessage:
+    report: true
+  eventMessage:
+    report: true
+  destinations: [
+    "http://127.0.0.1:9500/report"
+  ]
 
 heartbeat:
-enable: true
-delay: 1000
-period: 300000
-destinations: [
-"http://127.0.0.1:9500/heartbeat"
-]
+  enable: true
+  delay: 1000
+  period: 300000
+  destinations: [
+    "http://127.0.0.1:9500/heartbeat"
+  ]
 EOF
-rm -f mirai.zip
 
 printf "\nDone\n\n"
 
@@ -140,7 +140,7 @@ if ! (composer --no-interaction --version > /dev/null 2>&1); then
 fi
 
 composer --no-interaction --quiet config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton dicerobot --no-dev
+composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:2.0.0 dicerobot --no-dev
 sed -i "0,/10000/{s/10000/${qq_id}/}" dicerobot/config/custom_config.php
 
 printf "\nDone\n\n"
