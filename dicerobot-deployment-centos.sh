@@ -51,7 +51,7 @@ printf "Done\n\n"
 
 # Install PHP and Swoole
 printf "\033[32m2. 安装 PHP 和 Swoole\033[0m\n"
-printf "这一步可能需要数分钟时间，请耐心等待……\n"
+printf "这一步可能需要数分钟，取决于你的网络，请耐心等待……\n"
 
 dnf -y -q install epel-release > /dev/null 2>&1
 sed -e 's!^metalink=!#metalink=!g' -e 's!^#baseurl=!baseurl=!g' -e 's!//download.fedoraproject.org/pub!//mirrors.tuna.tsinghua.edu.cn!g' -e 's!http://mirrors.tuna!https://mirrors.tuna!g' -i /etc/yum.repos.d/epel*
@@ -76,6 +76,7 @@ printf "\nDone\n\n"
 
 # Deploy Mirai
 printf "\033[32m3. 部署 Mirai\033[0m\n"
+printf "这一步可能需要数分钟，取决于你的网络，请耐心等待……\n"
 
 cat > /etc/yum.repos.d/AdoptOpenJDK.repo <<EOF
 [AdoptOpenJDK]
