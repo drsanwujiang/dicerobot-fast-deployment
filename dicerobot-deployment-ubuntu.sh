@@ -51,7 +51,7 @@ printf "Done\n\n"
 
 # Install PHP and Swoole
 printf "\033[32m2. 安装 PHP 和 Swoole\033[0m\n"
-printf "这一步可能需要数分钟时间，请耐心等待……\n"
+printf "这一步可能需要数分钟，取决于你的网络，请耐心等待……\n"
 
 apt-get -qq update > /dev/null 2>&1
 apt-get -y -qq install apt-transport-https ca-certificates curl software-properties-common lsb-release > /dev/null 2>&1
@@ -75,6 +75,7 @@ printf "\nDone\n\n"
 
 # Deploy Mirai
 printf "\033[32m3. 部署 Mirai\033[0m\n"
+printf "这一步可能需要数分钟，取决于你的网络，请耐心等待……\n"
 
 wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key --quiet add - > /dev/null 2>&1
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/deb $(lsb_release -sc) main" > /etc/apt/sources.list.d/AdoptOpenJDK.list
