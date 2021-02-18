@@ -56,7 +56,7 @@ printf "这一步可能需要数分钟，取决于你的网络，请耐心等待
 apt-get -qq update > /dev/null 2>&1
 apt-get -y -qq install apt-transport-https ca-certificates curl software-properties-common lsb-release > /dev/null 2>&1
 wget -q -O /etc/apt/trusted.gpg.d/PHP.gpg https://packages.sury.org/php/apt.gpg
-echo "deb https://mirror.xtom.com.hk/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
+echo "deb https://mirror.sjtu.edu.cn/sury/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/PHP.list
 apt-get -qq update > /dev/null 2>&1
 apt-get -y -qq install php7.4-cli php7.4-json php7.4-mbstring php7.4-zip php7.4-dev php-pear > /dev/null 2>&1
 
