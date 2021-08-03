@@ -1,6 +1,6 @@
 # 快速部署 DiceRobot
 
-快速部署 DiceRobot 3.0.1
+快速部署 DiceRobot 3.0.2
 
 * 安装 PHP 及 Swoole
 * 部署 Mirai

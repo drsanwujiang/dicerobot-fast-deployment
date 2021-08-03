@@ -145,7 +145,7 @@ if ! (composer --no-interaction --version > /dev/null 2>&1); then
 fi
 
 composer --no-interaction --quiet config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:3.0.1 dicerobot --no-dev
+composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:3.0.2 dicerobot --no-dev
 sed -i "0,/10000/{s/10000/${qq_id}/}" dicerobot/config/custom_config.php
 
 printf "\nDone\n\n"
