@@ -15,5 +15,5 @@ jobs:
       - name: Test script
         run: |
           chmod +x ${{ github.workspace }}/dicerobot-deployment-ubuntu.sh
-          printf "10000\npassword\ny\n" | ${{ github.workspace }}/dicerobot-deployment-ubuntu.sh
+          printf "10000\npassword\ny\n" | sudo ${{ github.workspace }}/dicerobot-deployment-ubuntu.sh
         shell: bash
