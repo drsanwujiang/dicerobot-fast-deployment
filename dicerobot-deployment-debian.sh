@@ -65,7 +65,7 @@ if ! (php -v > /dev/null 2>&1); then
 fi
 
 apt-get -y -qq install libcurl4-openssl-dev > /dev/null 2>&1
-printf "yes\nyes\nyes\nno\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/dicerobot3-swoole.tgz > /dev/null 2>&1
+printf "yes\nyes\nyes\nno\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole/swoole-4.7.0.tgz > /dev/null 2>&1
 echo "extension=swoole.so" > /etc/php/7.4/mods-available/swoole.ini
 ln -s /etc/php/7.4/mods-available/swoole.ini /etc/php/7.4/cli/conf.d/20-swoole.ini
 
@@ -88,10 +88,16 @@ if ! (java --version > /dev/null 2>&1); then
   process_failed "Java 安装失败"
 fi
 
-wget -q https://dl.drsanwujiang.com/dicerobot/dicerobot3-mirai.zip
-mkdir mirai
-unzip -qq dicerobot3-mirai.zip -d mirai
-rm -f dicerobot3-mirai.zip
+wget -qO mirai.zip https://dl.drsanwujiang.com/dicerobot/mirai/mirai-mcl-2.1.0.zip
+
+if [ $? -ne 0 ]; then
+  process_failed "下载 Mirai 失败"
+fi
+
+mkdir -p mirai
+unzip -qq -o mirai.zip -d mirai
+rm -f mirai.zip
+
 cat > mirai/config/Console/AutoLogin.yml <<EOF
 accounts:
   -
@@ -102,6 +108,7 @@ accounts:
     configuration:
       protocol: ANDROID_PHONE
 EOF
+
 cat > mirai/config/net.mamoe.mirai-api-http/setting.yml <<EOF
 adapters:
   - http
@@ -131,7 +138,7 @@ printf "\nDone\n\n"
 # Deploy DiceRobot
 printf "\033[32m4. 部署 DiceRobot\033[0m\n"
 
-php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
+wget -qO composer-setup.php https://install.phpcomposer.com/installer
 php composer-setup.php --quiet
 rm -f composer-setup.php
 mv -f composer.phar /usr/local/bin/composer
@@ -145,7 +152,31 @@ if ! (composer --no-interaction --version > /dev/null 2>&1); then
 fi
 
 composer --no-interaction --quiet config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:3.0.2 dicerobot --no-dev
+mkdir -p dicerobot
+
+if [ "$(ls -A dicerobot)" = "" ]; then
+  composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:3.0.2 dicerobot --no-dev
+
+  if [ $? -ne 0 ]; then
+    process_failed "部署 DiceRobot 失败"
+  fi
+else
+  printf "\033[33m检测到 DiceRobot 目录不为空，更新 DiceRobot……\033[0m\n"
+
+  wget -qO dicerobot-update.zip https://dl.drsanwujiang.com/dicerobot/skeleton-update/skeleton-update-3.0.2.zip
+
+  if [ $? -ne 0 ]; then
+    process_failed "下载 DiceRobot 更新包失败"
+  fi
+
+  unzip -qq -o dicerobot-update.zip -d dicerobot
+  composer --no-interaction --quiet update --working-dir dicerobot --no-dev
+
+  if [ $? -ne 0 ]; then
+    process_failed "更新 DiceRobot 失败"
+  fi
+fi
+
 sed -i "0,/10000/{s/10000/${qq_id}/}" dicerobot/config/custom_config.php
 
 printf "\nDone\n\n"
