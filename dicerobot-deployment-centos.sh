@@ -66,7 +66,7 @@ if ! (php -v > /dev/null 2>&1); then
 fi
 
 dnf -y -q install curl-devel
-printf "yes\nyes\nyes\nno\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole/swoole-4.7.0.tgz > /dev/null 2>&1
+printf "yes\nyes\nyes\nno\nyes\nyes\n" | pecl install https://dl.drsanwujiang.com/dicerobot/swoole/swoole-4.7.1.tgz > /dev/null 2>&1
 echo "extension=swoole.so" > /etc/php.d/20-swoole.ini
 
 if ! (php --ri swoole > /dev/null 2>&1); then
@@ -94,7 +94,7 @@ if ! (java --version > /dev/null 2>&1); then
   process_failed "Java 安装失败"
 fi
 
-wget -qO mirai.zip https://dl.drsanwujiang.com/dicerobot/mirai/mirai-mcl-2.1.0.zip
+wget -qO mirai.zip https://dl.drsanwujiang.com/dicerobot/mirai/mirai-mcl-2.3.1.zip
 
 if [ $? -ne 0 ]; then
   process_failed "下载 Mirai 失败"
@@ -161,7 +161,7 @@ composer --no-interaction --quiet config -g repo.packagist composer https://mirr
 mkdir -p dicerobot
 
 if [ "$(ls -A dicerobot)" = "" ]; then
-  composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:3.0.2 dicerobot --no-dev
+  composer --no-interaction --quiet create-project drsanwujiang/dicerobot-skeleton:3.1.0 dicerobot --no-dev
 
   if [ $? -ne 0 ]; then
     process_failed "部署 DiceRobot 失败"
@@ -169,7 +169,7 @@ if [ "$(ls -A dicerobot)" = "" ]; then
 else
   printf "\033[33m检测到 DiceRobot 目录不为空，更新 DiceRobot……\033[0m\n"
 
-  wget -qO dicerobot-update.zip https://dl.drsanwujiang.com/dicerobot/skeleton-update/skeleton-update-3.0.2.zip
+  wget -qO dicerobot-update.zip https://dl.drsanwujiang.com/dicerobot/skeleton-update/skeleton-update-3.1.0.zip
 
   if [ $? -ne 0 ]; then
     process_failed "下载 DiceRobot 更新包失败"
@@ -204,6 +204,8 @@ Group=$(id -gn)
 Type=simple
 ExecStart=/usr/bin/php ${work_path}/dicerobot/dicerobot.php
 ExecReload=/bin/kill -12 \$MAINPID
+RestartSec=1s
+RestartForceExitStatus=99
 
 [Install]
 WantedBy=multi-user.target

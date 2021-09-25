@@ -1,6 +1,6 @@
 # 快速部署 DiceRobot
 
-快速部署 DiceRobot 3.0.2
+快速部署 DiceRobot 3.1.0
 
 * 安装 PHP 及 Swoole
 * 部署 Mirai
@@ -22,21 +22,21 @@
     ### CentOS 系统（仅支持 CentOS 8）
 
     ```shell
-    wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment@3.0/dicerobot-deployment-centos.sh
+    wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment@3.1/dicerobot-deployment-centos.sh
     sudo bash dicerobot-deployment-centos.sh
     ```
 
     ### Debian 系统
 
     ```shell
-    wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment@3.0/dicerobot-deployment-debian.sh
+    wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment@3.1/dicerobot-deployment-debian.sh
     sudo bash dicerobot-deployment-debian.sh
     ```
 
     ### Ubuntu 系统
 
     ```shell
-    wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment@3.0/dicerobot-deployment-ubuntu.sh
+    wget https://cdn.jsdelivr.net/gh/drsanwujiang/dicerobot-fast-deployment@3.1/dicerobot-deployment-ubuntu.sh
     sudo bash dicerobot-deployment-ubuntu.sh
     ```
 
